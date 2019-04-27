@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'KMScanner_Example' do
+  pod 'KMScanner', :path => '../'
+
+  target 'KMScanner_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
