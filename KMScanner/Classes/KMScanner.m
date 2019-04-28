@@ -417,7 +417,7 @@
     NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
     if (url == nil) {
         NSString *bundlePath = bundle.bundlePath;
-        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/KMScanner.bundle/"];
+        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/KMScanner.framework/KMScanner.bundle/"];
         url = [NSURL URLWithString:urlString];
     }
     NSBundle *imageBundle = [NSBundle bundleWithURL:url];
