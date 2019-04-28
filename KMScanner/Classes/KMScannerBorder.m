@@ -66,6 +66,11 @@
     // 图像文件包
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
+    if (url == nil) {
+        NSString *bundlePath = bundle.bundlePath;
+        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/KMScanner.bundle/"];
+        url = [NSURL URLWithString:urlString];
+    }
     NSBundle *imageBundle = [NSBundle bundleWithURL:url];
     
     // 冲击波图像

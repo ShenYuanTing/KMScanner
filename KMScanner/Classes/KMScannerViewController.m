@@ -219,6 +219,11 @@
     
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
+    if (url == nil) {
+        NSString *bundlePath = bundle.bundlePath;
+        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/KMScanner.bundle/"];
+        url = [NSURL URLWithString:urlString];
+    }
     NSBundle *imageBundle = [NSBundle bundleWithURL:url];
     UIImage *btnImage = [UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
     [_torchBtn setImage:btnImage forState:UIControlStateNormal];
@@ -268,6 +273,11 @@
     
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
+    if (url == nil) {
+        NSString *bundlePath = bundle.bundlePath;
+        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/KMScanner.bundle/"];
+        url = [NSURL URLWithString:urlString];
+    }
     NSBundle *imageBundle = [NSBundle bundleWithURL:url];
     if (_isOpen) {
         NSString *path = [imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
