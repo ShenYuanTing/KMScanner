@@ -63,6 +63,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTorch:(BOOL)isOpen;
 
++ (UIImage *)pathForResource:(nullable NSString *)name ofType:(nullable NSString *)ext;
+
 @end
 
 NS_ASSUME_NONNULL_END

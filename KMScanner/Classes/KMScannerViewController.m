@@ -225,7 +225,7 @@
         url = [NSURL URLWithString:urlString];
     }
     NSBundle *imageBundle = [NSBundle bundleWithURL:url];
-    UIImage *btnImage = [UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
+    UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
     [_torchBtn setImage:btnImage forState:UIControlStateNormal];
     _torchBtn.adjustsImageWhenHighlighted = NO;
     [_torchBtn addTarget:self action:@selector(torchBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -282,14 +282,14 @@
     if (_isOpen) {
         NSString *path = [imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
 //        UIImage *openImage = [[UIImage imageWithContentsOfFile:path] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImage *openImage = [UIImage imageWithContentsOfFile:path];
+        UIImage *openImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:path];
         [_torchBtn setImage:openImage forState:UIControlStateNormal];
         [_torchBtn setTitle:@"轻触关闭" forState:UIControlStateNormal];
         [_scanner setTorch:YES];
     }
     else {
         [_torchBtn setTitle:@"轻触照亮" forState:UIControlStateNormal];
-        UIImage *btnImage = [UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
+        UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
         [_torchBtn setImage:btnImage forState:UIControlStateNormal];
         [_scanner setTorch:NO];
     }

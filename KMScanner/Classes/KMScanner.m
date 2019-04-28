@@ -436,4 +436,15 @@ void soundCompleteCallback(SystemSoundID soundID, void *clientData){
     
 }
 
++ (UIImage *)pathForResource:(nullable NSString *)name ofType:(nullable NSString *)ext{
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
+    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
+    
+    NSString *path = [imageBundle pathForResource:name ofType:ext];
+    //        UIImage *openImage = [[UIImage imageWithContentsOfFile:path] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImage *openImage = [UIImage imageWithContentsOfFile:path];
+    return openImage;
+}
+
 @end
