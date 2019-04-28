@@ -7,7 +7,7 @@
 //
 
 #import "KMViewController.h"
-#import "KMScannerViewController.h"
+#import "KMScanner.h"
 
 @interface KMViewController ()
 
@@ -28,9 +28,8 @@
 }
 
 -(IBAction)btnClick:(id)sender{
-    UIImage *avatar = [UIImage imageNamed:@"avatar"];
 
-    KMScannerViewController *scanner = [[KMScannerViewController alloc] initWithCompletion:^(NSString *stringValue) {
+    UIViewController *scanner = [KMScanner initWithCompletion:^(NSString *stringValue) {
         
         NSLog(@"%@",stringValue);
         
