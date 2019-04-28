@@ -224,7 +224,7 @@
         NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/Frameworks/KMScanner.framework/KMScanner.bundle/"];
         url = [NSURL URLWithString:urlString];
     }
-    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
+//    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
     UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
     [_torchBtn setImage:btnImage forState:UIControlStateNormal];
     _torchBtn.adjustsImageWhenHighlighted = NO;
@@ -278,9 +278,9 @@
         NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/Frameworks/KMScanner.framework/KMScanner.bundle/"];
         url = [NSURL URLWithString:urlString];
     }
-    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
+//    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
     if (_isOpen) {
-        NSString *path = [imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
+//        NSString *path = [imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
 //        UIImage *openImage = [[UIImage imageWithContentsOfFile:path] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIImage *openImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:path];
         [_torchBtn setImage:openImage forState:UIControlStateNormal];
