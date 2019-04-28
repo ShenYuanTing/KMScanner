@@ -16,6 +16,8 @@
 /// 相册图片最大尺寸
 #define kImageMaxSize   CGSizeMake(1000, 1000)
 
+#define BRIGHTLIMIT 80//屏幕亮度临界值 低于显示手电筒按钮
+
 @interface KMScannerViewController ()<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 /// 完成回调
 @property (nonatomic, copy) void (^completionCallBack)(NSString *);
@@ -37,8 +39,7 @@
 }
 
 -(instancetype) initWithCompletion:(void (^)(NSString * _Nonnull))completion{
-    self = [super init];
-    if (self) {
+    if (self= [super init]) {
         self.completionCallBack = completion;
     }
     return self;
@@ -62,15 +63,31 @@
     ///添加获取图像亮度值
     __weak typeof(_scanner) weakScanner = _scanner;
     [_scanner addCaptureImage:^(int bright) {
-        if (bright > 40) {
+        NSLog(@"bright = %d",bright);
+        if (bright > BRIGHTLIMIT) {
             if (weakScanner.isTorchOpen) {
                 return;
             }
-            weakSelf.torchBtn.hidden = YES;
+//            weakSelf.torchBtn.hidden = YES;
+            [weakSelf setTorchBtnAlpha:0];
         } else {
-            weakSelf.torchBtn.hidden = NO;
+//            weakSelf.torchBtn.hidden = NO;
+            [weakSelf setTorchBtnAlpha:1];
+
         }
     }];
+}
+
+-(void)setTorchBtnAlpha:(int)alpha{
+    static BOOL flag = YES;
+    if (flag) {
+        flag = NO;
+        [UIView animateWithDuration:0.5f animations:^{
+            self.torchBtn.alpha = alpha;
+        } completion:^(BOOL finished) {
+            flag = YES;
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -210,7 +227,7 @@
     [_scannerBorder addSubview:_torchBtn];
     
     _isOpen = NO;
-    _torchBtn.hidden = YES;
+    _torchBtn.alpha = 0;
 }
 
 /// 准备扫描框
@@ -236,7 +253,9 @@
 //    self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
     
     // 2> 标题
-    self.title = @"扫一扫";
+    if (!self.title.length) {
+        self.title = @"扫一扫";
+    }
     
     // 3> 左右按钮
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(clickCloseButton)];

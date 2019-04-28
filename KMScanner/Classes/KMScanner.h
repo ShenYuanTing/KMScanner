@@ -11,11 +11,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class KMScannerViewController;
+
 /// 二维码/条码扫描器
 @interface KMScanner : NSObject
 
 @property (nonatomic,assign,readonly) BOOL isTorchOpen;
 
+/// 实例化扫描控制器
+///
+/// @param completion 完成回调
+///
+/// @return 扫描控制器
++ (UIViewController *)initWithCompletion:(void (^)(NSString *stringValue))completion;
 
 /// 使用视图实例化扫描器，扫描预览窗口会添加到指定视图中
 ///

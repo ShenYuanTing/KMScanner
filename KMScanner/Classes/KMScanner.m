@@ -7,6 +7,7 @@
 //
 
 #import "KMScanner.h"
+#import "KMScannerViewController.h"
 #import <AVFoundation/AVFoundation.h>
 
 /// 最大检测次数
@@ -44,6 +45,11 @@
     //    NSTimer * _brightTimer;
     
     AVCaptureVideoDataOutput * _videoOutput;
+}
+
++ (UIViewController *)initWithCompletion:(void (^)(NSString *stringValue))completion{
+    KMScannerViewController *scanner = [[KMScannerViewController alloc] initWithCompletion:completion];
+    return scanner;
 }
 
 #pragma mark - 生成二维码
@@ -132,10 +138,8 @@
     return [[self alloc] initWithView:view scanFrame:scanFrame completion:completion];
 }
 
-- (instancetype)initWithView:(UIView *)view scanFrame:(CGRect)scanFrame completion:(void (^)(NSString *))completion {
-    self = [super init];
-    
-    if (self) {
+- (instancetype)initWithView:(UIView *)view scanFrame:(CGRect)scanFrame completion:(void (^)(NSString *))completion {    
+    if (self= [super init]) {
         self.parentView = view;
         self.scanFrame = scanFrame;
         self.completionCallBack = completion;
