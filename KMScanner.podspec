@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KMScanner'
-  s.version          = '1.6.4'
+  s.version          = '1.6.5'
   s.summary          = 'CodeScan.'
 
 # This description is used to generate tags and improve search results.
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/ShenYuanTing/KMScanner/tree/1.6.4'
+  s.homepage         = 'https://github.com/ShenYuanTing/KMScanner/tree/1.6.5'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'shenhao' => 'shenhao@mfhcd.com' }
   s.source           = { :git => 'https://github.com/ShenYuanTing/KMScanner.git', :tag => s.version.to_s }
