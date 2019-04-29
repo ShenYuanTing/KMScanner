@@ -238,7 +238,16 @@
     CGFloat width = self.view.bounds.size.width - 80;
     _scannerBorder = [[KMScannerBorder alloc] initWithFrame:CGRectMake(0, 0, width, width)];
     
-    _scannerBorder.center = self.view.center;
+    CGFloat selfHeight = self.view.bounds.size.height;
+    
+    CGFloat screenHeight = KM_ScreenHeight;
+    
+    CGFloat borderCenterY = screenHeight/2;
+    if (screenHeight>selfHeight) {
+        borderCenterY = screenHeight/2 - (screenHeight - selfHeight)/2;
+    }
+    
+    _scannerBorder.center = CGPointMake(KM_ScreenWidth/2, borderCenterY);
     _scannerBorder.tintColor = self.navigationController.navigationBar.tintColor;
     
     [self.view addSubview:_scannerBorder];

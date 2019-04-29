@@ -304,6 +304,7 @@
             if (self.completionCallBack != nil) {
                 [self playSound];
                 self.completionCallBack(dataObject.stringValue);
+                self.completionCallBack = nil;
             }
         }
     }
