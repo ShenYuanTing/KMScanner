@@ -9,11 +9,57 @@
 #import "KMScanner.h"
 #import "KMScannerViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "UIAlertController_KM.h"
 
-/// 最大检测次数
-#define kMaxDetectedCount   20
 
-#define inputMessage @"inputMessage"
+
+
+@implementation NSObject (KMScanner)
+
+/// 获取当前控制器
+- (UIViewController *)SG_getCurrentViewController {
+    UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+    if (vc.presentedViewController) {
+        if ([vc.presentedViewController isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *navVc = (UINavigationController *)vc.presentedViewController;
+            vc = navVc.visibleViewController;
+        } else if ([vc.presentedViewController isKindOfClass:[UITabBarController class]]){
+            UITabBarController *tabVc = (UITabBarController *)vc.presentedViewController;
+            if ([tabVc.selectedViewController isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navVc = (UINavigationController *)tabVc.selectedViewController;
+                return navVc.visibleViewController;
+            } else {
+                return tabVc.selectedViewController;
+            }
+        } else {
+            vc = vc.presentedViewController;
+        }
+        
+    } else {
+        if ([vc isKindOfClass:[UITabBarController class]]) {
+            UITabBarController *tabVc = (UITabBarController *)vc;
+            if ([tabVc.selectedViewController isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navVc = (UINavigationController *)tabVc.selectedViewController;
+                return navVc.visibleViewController;
+            } else{
+                return tabVc.selectedViewController;
+            }
+        } else if ([vc isKindOfClass:[UINavigationController class]]){
+            UINavigationController *navVc = (UINavigationController *)vc;
+            vc = navVc.visibleViewController;
+        }
+    }
+    return vc;
+}
+
+#pragma -mark 延迟几秒执行
++ (void)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
+
+
+@end
 
 @interface KMScanner() <AVCaptureMetadataOutputObjectsDelegate,AVCaptureVideoDataOutputSampleBufferDelegate>
 /// 父视图弱引用
@@ -45,6 +91,68 @@
     //    NSTimer * _brightTimer;
     
     AVCaptureVideoDataOutput * _videoOutput;
+}
+
++ (void)skipToScanViewType:(KMScanVCType)type
+                Completion:(void (^)(NSString *stringValue))completion{
+//    [KMScanner changeToVCType:type returnBlock:completion];
+//
+//    return;
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (device) {
+        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (status == AVAuthorizationStatusNotDetermined) {
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                if (granted) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [KMScanner changeToVCType:type returnBlock:completion];
+                    });
+                } else {
+                }
+            }];
+        } else if (status == AVAuthorizationStatusAuthorized) { // 用户允许当前应用访问相机
+            [KMScanner changeToVCType:type returnBlock:completion];
+        } else if (status == AVAuthorizationStatusDenied) { // 用户拒绝当前应用访问相机
+            [NSObject performBlock:^{
+                [UIAlertController showNormalAlertWithTitle:@"提示"
+                                                contentText:@"请去-> [设置 - 隐私 - 相机 - 金付通] 打开访问开关"
+                                            leftButtonTitle:@"确定"
+                                           rightButtonTitle:nil
+                                                     finish:^(NSInteger index){
+                                                         //                                                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                         
+                                                     }];
+            } afterDelay:0.2];
+            
+        } else if (status == AVAuthorizationStatusRestricted) {
+            NSLog(@"因为系统原因, 无法访问相册");
+        }
+    }else{
+        [NSObject performBlock:^{
+            [UIAlertController showNormalAlertWithTitle:@"提示"
+                                            contentText:@"模拟器设备不可用"
+                                        leftButtonTitle:@"确定"
+                                       rightButtonTitle:nil
+                                                 finish:^(NSInteger index){
+                                                     //                                                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                     
+                                                 }];
+        } afterDelay:0.2];
+    }
+}
+
++(void)changeToVCType:(KMScanVCType)type
+          returnBlock:(void (^)(NSString *stringValue))completion{
+    
+    KMScannerViewController *scanner = [[KMScannerViewController alloc] initWithVCType:type Completion:completion];
+    
+    if ([NSObject SG_getCurrentViewController].navigationController) {
+        [[NSObject SG_getCurrentViewController].navigationController pushViewController:scanner animated:YES];
+
+    }else{
+        [[NSObject SG_getCurrentViewController] showDetailViewController:scanner sender:nil];
+    }
+    
 }
 
 + (UIViewController *)initWithCompletion:(void (^)(NSString *stringValue))completion{
@@ -291,6 +399,7 @@
     
     // 1> 输入设备
     _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
     [_device lockForConfiguration:nil];
     _device.activeVideoMinFrameDuration = CMTimeMake(1, 5);
     [_device unlockForConfiguration];
@@ -330,6 +439,38 @@
     // 6> 设置预览图层会话
     [self setupLayers];
     
+}
+
+-(BOOL)devicePremission{
+    if (_device) {
+        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (status == AVAuthorizationStatusNotDetermined) {
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                
+            }];
+            return NO;
+        } else if (status == AVAuthorizationStatusAuthorized) { // 用户允许当前应用访问相机
+            return YES;
+            
+        } else if (status == AVAuthorizationStatusDenied) { // 用户拒绝当前应用访问相机
+//            [NSObject performBlock:^{
+//                [UIAlertController showNormalAlertWithTitle:@"提示"
+//                                                contentText:@"请去-> [设置 - 隐私 - 相机 - 金付通] 打开访问开关"
+//                                            leftButtonTitle:@"确定"
+//                                           rightButtonTitle:nil
+//                                                     finish:^(NSInteger index){
+//                                                         //                                                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+//
+//                                                     }];
+//            } afterDelay:0.2];
+            return NO;
+            
+        } else if (status == AVAuthorizationStatusRestricted) {
+            NSLog(@"因为系统原因, 无法访问相册");
+            return NO;
+        }
+    }
+    return NO;
 }
 
 /************************ 添加图像捕捉输出 *********************/

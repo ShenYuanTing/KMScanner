@@ -11,18 +11,15 @@
 #import "KMScannerMaskView.h"
 #import "KMScanner.h"
 
-/// 控件间距
-#define kControlMargin  42.0
-/// 相册图片最大尺寸
-#define kImageMaxSize   CGSizeMake(1000, 1000)
 
-#define BRIGHTLIMIT 80//屏幕亮度临界值 低于显示手电筒按钮
 
-@interface KMScannerViewController ()<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface KMScannerViewController ()<UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIGestureRecognizerDelegate>
 /// 完成回调
 @property (nonatomic, copy) void (^completionCallBack)(NSString *);
 
-@property (nonatomic,strong) UIButton *torchBtn;;
+@property (nonatomic,strong) UIButton *torchBtn;
+
+@property (nonatomic ,assign) KMScanVCType type;
 
 @end
 
@@ -36,6 +33,14 @@
     
     
     BOOL _isOpen;
+}
+
+-(instancetype)initWithVCType:(KMScanVCType)type Completion:(void (^)(NSString * _Nonnull))completion{
+    if (self= [super init]) {
+        self.completionCallBack = completion;
+        self.type = type;
+    }
+    return self;
 }
 
 -(instancetype) initWithCompletion:(void (^)(NSString * _Nonnull))completion{
@@ -92,7 +97,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [self.navigationController.navigationBar setHidden:NO];
     [_scannerBorder startScannerAnimating];
     [_scanner startScan];
 }
@@ -252,6 +257,17 @@
 
 /// 准备导航栏
 - (void)prepareNavigationBar {
+    
+    if (self.type == KMScanVCType_Cunstom) {
+        UINavigationBar *navBar = self.navigationController.navigationBar;
+        navBar.titleTextAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:19],NSForegroundColorAttributeName:KM_RGB(51, 51, 51)};
+        navBar.tintColor = KM_RGB(51, 51, 51);
+        navBar.barTintColor = [UIColor whiteColor];
+        
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[KMScanner pathForResource:@"back@2x" ofType:@"png"] style:UIBarButtonItemStylePlain target:self action:@selector(onClickLeftItem)];
+        self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    }
+    
     // 1> 背景颜色
 //    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithWhite:0.1 alpha:0.1]];
 //    self.navigationController.navigationBar.translucent = YES;
@@ -265,6 +281,21 @@
     // 3> 左右按钮
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(clickCloseButton)];
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(clickAlbumButton)];
+}
+
+-(void)onClickLeftItem{
+    NSArray *viewcontrollers = self.navigationController.viewControllers;
+    if (viewcontrollers.count > 1) {
+        if ([viewcontrollers objectAtIndex:viewcontrollers.count - 1] == self) {//push
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }
+        
+    }
+    else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
+    }
 }
 
 /// 手电筒按钮
@@ -303,5 +334,14 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
+        //只有二级以及以下的页面允许手势返回
+        return self.navigationController.viewControllers.count;
+        
+    }
+    return YES;
+}
 
 @end

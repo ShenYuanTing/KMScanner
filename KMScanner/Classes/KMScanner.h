@@ -8,15 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "KMScannerViewController.h"
+#import "KM_Config.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
-
-@class KMScannerViewController;
 
 /// 二维码/条码扫描器
 @interface KMScanner : NSObject
 
 @property (nonatomic,assign,readonly) BOOL isTorchOpen;
+
+/// 扫描控制器
+///
+/// @param type 试图样式
+/// @param completion 完成回调
+///
++ (void)skipToScanViewType:(KMScanVCType)type
+                Completion:(void (^)(NSString *stringValue))completion;
 
 /// 实例化扫描控制器
 ///
