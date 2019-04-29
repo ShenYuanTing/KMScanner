@@ -145,7 +145,7 @@
           returnBlock:(void (^)(NSString *stringValue))completion{
     
     KMScannerViewController *scanner = [[KMScannerViewController alloc] initWithVCType:type Completion:completion];
-    
+    scanner.hidesBottomBarWhenPushed = YES;
     if ([NSObject SG_getCurrentViewController].navigationController) {
         [[NSObject SG_getCurrentViewController].navigationController pushViewController:scanner animated:YES];
 
