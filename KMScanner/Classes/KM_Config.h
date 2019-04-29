@@ -21,6 +21,19 @@
 #define SPACE_SMALL 5
 #define MESSAGE_LINE_SPACE 5
 
+#define KM_IPHONE_X \
+({BOOL isPhoneX = NO;\
+if (@available(iOS 11.0, *)) {\
+isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0.0;\
+}\
+(isPhoneX);})
+
+/**
+ *导航栏高度
+ */
+#define KM_SafeAreaTopHeight (KM_IPHONE_X ? 88 : 64)
+
+
 #define KM_BaseColor  KM_HEXCOLOR(0x6293f9)
 
 #define KM_ScreenWidth                         [[UIScreen mainScreen] bounds].size.width
