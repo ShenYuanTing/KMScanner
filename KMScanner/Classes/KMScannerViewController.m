@@ -222,15 +222,7 @@
     [_torchBtn setTitle:@"轻触照亮" forState:UIControlStateNormal];
     _torchBtn.titleLabel.font = [UIFont systemFontOfSize:12];
     
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
-    if (url == nil) {
-        NSString *bundlePath = bundle.bundlePath;
-        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/Frameworks/KMScanner.framework/KMScanner.bundle/"];
-        url = [NSURL URLWithString:urlString];
-    }
-//    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
-    UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
+    UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
     [_torchBtn setImage:btnImage forState:UIControlStateNormal];
     _torchBtn.adjustsImageWhenHighlighted = NO;
     [_torchBtn addTarget:self action:@selector(torchBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -302,25 +294,16 @@
 - (void)torchBtnClick {
     _isOpen = !_isOpen;
     
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSURL *url = [bundle URLForResource:@"KMScanner" withExtension:@"bundle"];
-    if (url == nil) {
-        NSString *bundlePath = bundle.bundlePath;
-        NSString *urlString = [[@"file://" stringByAppendingString: bundlePath] stringByAppendingString:@"/Frameworks/KMScanner.framework/KMScanner.bundle/"];
-        url = [NSURL URLWithString:urlString];
-    }
-//    NSBundle *imageBundle = [NSBundle bundleWithURL:url];
     if (_isOpen) {
-//        NSString *path = [imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
-//        UIImage *openImage = [[UIImage imageWithContentsOfFile:path] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImage *openImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:path];
+
+        UIImage *openImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
         [_torchBtn setImage:openImage forState:UIControlStateNormal];
         [_torchBtn setTitle:@"轻触关闭" forState:UIControlStateNormal];
         [_scanner setTorch:YES];
     }
     else {
         [_torchBtn setTitle:@"轻触照亮" forState:UIControlStateNormal];
-        UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];//[UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
+        UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"]; pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
         [_torchBtn setImage:btnImage forState:UIControlStateNormal];
         [_scanner setTorch:NO];
     }
