@@ -303,7 +303,7 @@
     }
     else {
         [_torchBtn setTitle:@"轻触照亮" forState:UIControlStateNormal];
-        UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"]; pathForResource:@"QRCodeTorch@2x" ofType:@"png"]];
+        UIImage *btnImage = [KMScanner pathForResource:@"QRCodeTorch@2x" ofType:@"png"];
         [_torchBtn setImage:btnImage forState:UIControlStateNormal];
         [_scanner setTorch:NO];
     }
