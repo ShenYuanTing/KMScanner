@@ -150,6 +150,9 @@ CGFloat contentViewHeight;
     
     _titleView.frame = CGRectMake(0, MARGIN_TOP, _iconImageView.frame.size.width + SPACE_LARGE + titleSize.width, MAX(_iconImageView.frame.size.height, titleSize.height));
     _titleView.center = CGPointMake(contentViewWidth / 2, MARGIN_TOP + _titleView.frame.size.height / 2);
+    if (_titleLabel != nil) {
+        _titleLabel.frame = CGRectMake(0, 0, _titleView.frame.size.width, 30);
+    }
     [_contentView addSubview:_titleView];
     contentViewHeight += _titleView.frame.size.height;
 }
